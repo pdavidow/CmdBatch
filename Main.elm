@@ -4,24 +4,12 @@ import Html exposing (Html, div, button, text)
 import Html.Events exposing (onClick)
 
 
-import MusicNotePlayer exposing (playFreqs)
+import MusicNotePlayer exposing (play)
 ------------------------------------------------
 
-type alias Model = { freqs: List Float}
+type alias Model = {}
 
-
-initialModel: Model
-initialModel =
-    { freqs = [260, 280, 300]}
-
-
-init : (Model, Cmd Msg)
-init =
-    (initialModel, Cmd.none)
-
-
-type Msg =
-    Play
+type Msg = Play
 
 
 view : Model -> Html Msg
@@ -34,7 +22,7 @@ update msg model =
     case msg of
         Play ->
             ( model
-            , playFreqs model.freqs
+            , play
             )
 
 
@@ -45,7 +33,7 @@ subscriptions
 
 main =
   Html.program
-    { init = init
+    { init = ({}, Cmd.none)
     , view = view
     , update = update
     , subscriptions = subscriptions

@@ -1,40 +1,22 @@
-module MusicNotePlayer exposing (playFreqs)
+module MusicNotePlayer exposing (play)
 
 import AudioNote exposing (AudioNote)
 import Ports exposing (port_playNote)
 
 
-noteDuration = 1.0
-gapDuration = 0.5
-interval = noteDuration + gapDuration
+play : Cmd msg
+play =
+    Cmd.batch (Debug.log "playCmds" playNotesCmds)
 
 
-playFreqs : List Float -> Cmd msg
-playFreqs freqs =
+playNotesCmds : List (Cmd msg)
+playNotesCmds =
     let
-        totalInterval = interval * toFloat (List.length freqs)
-        playCmds = playFreqsCmds freqs
-    in
-        Cmd.batch (Debug.log "playCmds" playCmds)
-
-
-playFreqsCmds : List Float -> List (Cmd msg)
-playFreqsCmds freqs =
-    let
-        notes = audioNotesFor freqs
+        notes = [ AudioNote 300.0 1.0 2.0
+                , AudioNote 310.0 2.0 3.0
+                , AudioNote 320.0 3.0 4.0
+                ]
     in
         List.map port_playNote notes
 
 
-audioNotesFor : List Float -> List AudioNote
-audioNotesFor freqs =
-    let
-        func: Int -> Float -> AudioNote
-        func index freq =
-            let
-                startOffset =  (toFloat index) * interval
-                stopOffset =  startOffset + noteDuration
-            in
-                AudioNote freq (startOffset) (stopOffset)
-    in
-        List.indexedMap func freqs
